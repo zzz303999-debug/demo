@@ -1,0 +1,122 @@
+@baseUrl = http://localhost:8080
+
+### 1. 商品上架 - 成功 (201 Created)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "深入理解Java虚拟机",
+  "description": "JVM经典书籍，深入剖析Java虚拟机原理",
+  "price": 79.00,
+  "stock": 100,
+  "category": "计算机",
+  "author": "周志明",
+  "isbn": "978-7-111-50001"
+}
+
+### 2. 商品上架 - 第二本 (201 Created)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "领域驱动设计",
+  "description": "DDD经典之作，领域驱动设计核心思想",
+  "price": 99.00,
+  "stock": 50,
+  "category": "计算机",
+  "author": "Eric Evans",
+  "isbn": "978-7-111-50002"
+}
+
+### 3. 商品上架 - 名称为空 (400 Bad Request)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": 10.00
+}
+
+### 4. 商品上架 - 单价为空 (400 Bad Request)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "测试商品",
+  "price": null
+}
+
+### 5. 商品上架 - 单价为0 (400 Bad Request)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "测试商品",
+  "price": 0
+}
+
+### 6. 商品上架 - 单价为负数 (400 Bad Request)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "测试商品",
+  "price": -1.00
+}
+
+### 7. 查询商品 - 成功 (200 OK)
+# 将 1 替换为实际上架后返回的 id
+GET {{baseUrl}}/api/products/1
+
+### 8. 查询商品 - 不存在 (404 Not Found)
+GET {{baseUrl}}/api/products/99999
+
+### 9. 按名称搜索商品 (200 OK)
+GET {{baseUrl}}/api/products?name=Java
+
+### 10. 按名称搜索商品 - 无匹配 (200 OK, 空数组)
+GET {{baseUrl}}/api/products?name=不存在的书
+
+### 11. 按分类搜索商品 (200 OK)
+GET {{baseUrl}}/api/products?category=计算机
+
+### 12. 按分类搜索商品 - 无匹配 (200 OK, 空数组)
+GET {{baseUrl}}/api/products?category=未知分类
+
+### 13. 无参数搜索 (200 OK, 空数组)
+GET {{baseUrl}}/api/products
+
+### 14. 库存入库 +20 (200 OK)
+# 将 1 替换为实际商品 id
+PATCH {{baseUrl}}/api/products/1/stock
+Content-Type: application/json
+
+{
+  "quantity": 20
+}
+
+### 15. 库存出库 -30 (200 OK)
+# 将 1 替换为实际商品 id
+PATCH {{baseUrl}}/api/products/1/stock
+Content-Type: application/json
+
+{
+  "quantity": -30
+}
+
+### 16. 库存出库 - 库存不足 (409 Conflict)
+# 将 1 替换为实际商品 id
+PATCH {{baseUrl}}/api/products/1/stock
+Content-Type: application/json
+
+{
+  "quantity": -99999
+}
+
+### 17. 库存变更 - 商品不存在 (404 Not Found)
+PATCH {{baseUrl}}/api/products/99999/stock
+Content-Type: application/json
+
+{
+  "quantity": 10
+}
