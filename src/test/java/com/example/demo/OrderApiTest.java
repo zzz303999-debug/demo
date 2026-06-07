@@ -20,6 +20,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.URI;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -55,7 +58,7 @@ class OrderApiTest {
             }
 
             @Override
-            public void handleError(ClientHttpResponse response) {
+            public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
             }
         });
     }
@@ -85,7 +88,7 @@ class OrderApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
