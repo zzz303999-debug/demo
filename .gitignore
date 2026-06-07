@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# macOS
+.DS_Store
+
+# Gradle
+*.log
+
+# Java
+*.class
+*.jar
+*.war
