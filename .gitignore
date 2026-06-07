@@ -46,3 +46,7 @@ out/
 *.class
 *.jar
 *.war
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
