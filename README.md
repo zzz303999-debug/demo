@@ -1,4 +1,4 @@
-# 网上书店管理系统
+# demo
 
 基于 Spring Boot + Vue 3 的网上书店管理系统，采用 DDD 四层架构和 Feature-Sliced 前端模块化设计。
 
