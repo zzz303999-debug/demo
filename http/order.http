@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:8080
+@baseUrl = http://localhost:8081
 
 ### 1. 下单 - 成功 (201 Created)
 # 请将 customerId 和 productId 替换为实际的 id

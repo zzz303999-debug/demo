@@ -15,7 +15,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +50,7 @@ class ProductApiTest {
             }
 
             @Override
-            public void handleError(ClientHttpResponse response) {
+            public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.application.auth.dto.LoginResponse;
 import com.example.demo.application.customer.dto.CustomerResponse;
 import com.example.demo.application.customer.dto.RegisterCustomerRequest;
 import com.example.demo.application.customer.dto.UpdateCustomerRequest;
@@ -15,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +52,7 @@ class CustomerApiTest {
             }
 
             @Override
-            public void handleError(ClientHttpResponse response) {
+            public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
             }
         });
     }
@@ -59,7 +63,7 @@ class CustomerApiTest {
         return "http://localhost:" + port + path;
     }
 
-    // ==================== POST /api/customers ====================
+    // ==================== POST /api/auth/register（注册已迁移至 AuthController） ====================
 
     @Test
     @Order(1)
@@ -75,11 +79,12 @@ class CustomerApiTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
-        ResponseEntity<CustomerResponse> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, CustomerResponse.class);
+        ResponseEntity<LoginResponse> resp = restTemplate.exchange(
+                url("/api/auth/register"), HttpMethod.POST, req, LoginResponse.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(resp.getBody()).isNotNull();
+        assertThat(resp.getBody().getToken()).startsWith("eyJ");
         assertThat(resp.getBody().getUsername()).isEqualTo("testuser");
         assertThat(resp.getBody().getEmail()).isEqualTo("test@example.com");
         customerId = resp.getBody().getId();
@@ -97,7 +102,7 @@ class CustomerApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(resp.getBody()).contains("用户名已存在");
@@ -115,7 +120,7 @@ class CustomerApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("用户名长度");
@@ -133,7 +138,7 @@ class CustomerApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("用户名不能为空");
@@ -151,7 +156,7 @@ class CustomerApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("密码长度");
@@ -170,7 +175,7 @@ class CustomerApiTest {
         HttpEntity<RegisterCustomerRequest> req = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> resp = restTemplate.exchange(
-                url("/api/customers"), HttpMethod.POST, req, String.class);
+                url("/api/auth/register"), HttpMethod.POST, req, String.class);
 
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("邮箱格式");

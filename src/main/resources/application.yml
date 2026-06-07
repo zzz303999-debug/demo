@@ -24,6 +24,17 @@ spring:
     schemas: public
     out-of-order: false
 
+# 请求日志
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.example.demo: DEBUG
+
 # 服务器端口
 server:
-  port: 8080
+  port: 8081
+
+# JWT 配置
+jwt:
+  secret: WScgxcjaQRt3AKZwOB1nBPRjcl+dqXiywDgXtjPDXcY=
+  expiration-ms: 86400000

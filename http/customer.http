@@ -1,71 +1,13 @@
-@baseUrl = http://localhost:8080
+@baseUrl = http://localhost:8081
 
-### 1. 客户注册 - 成功 (201 Created)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "zhangsan",
-  "password": "123456",
-  "email": "zhangsan@example.com",
-  "phone": "13800001111",
-  "address": "北京市海淀区"
-}
-
-### 2. 客户注册 - 用户名重复 (409 Conflict)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "zhangsan",
-  "password": "123456"
-}
-
-### 3. 客户注册 - 用户名过短 (400 Bad Request)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "ab",
-  "password": "123456"
-}
-
-### 4. 客户注册 - 用户名为空 (400 Bad Request)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "",
-  "password": "123456"
-}
-
-### 5. 客户注册 - 密码过短 (400 Bad Request)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "newuser",
-  "password": "12345"
-}
-
-### 6. 客户注册 - 邮箱格式错误 (400 Bad Request)
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-
-{
-  "username": "newuser",
-  "password": "123456",
-  "email": "invalid-email"
-}
-
-### 7. 查询客户 - 成功 (200 OK)
-# 请将 1 替换为注册成功后返回的 id
+### 1. 查询客户 - 成功 (200 OK)
+# 请先用 auth.http 注册获取 id
 GET {{baseUrl}}/api/customers/1
 
-### 8. 查询客户 - 不存在 (404 Not Found)
+### 2. 查询客户 - 不存在 (404 Not Found)
 GET {{baseUrl}}/api/customers/99999
 
-### 9. 修改客户信息 - 成功 (200 OK)
+### 3. 修改客户信息 - 成功 (200 OK)
 # 请将 1 替换为注册成功后返回的 id
 PUT {{baseUrl}}/api/customers/1
 Content-Type: application/json
@@ -76,7 +18,7 @@ Content-Type: application/json
   "address": "上海市浦东新区"
 }
 
-### 10. 修改客户信息 - 不存在 (404 Not Found)
+### 4. 修改客户信息 - 不存在 (404 Not Found)
 PUT {{baseUrl}}/api/customers/99999
 Content-Type: application/json
 
