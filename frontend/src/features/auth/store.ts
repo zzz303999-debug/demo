@@ -1,14 +1,41 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { login as loginApi, register as registerApi, logout as logoutApi } from './api'
+import { ref, watch } from 'vue'
+import { login as loginApi, register as registerApi } from './api'
 import type { LoginRequest, RegisterRequest } from './api'
 
+function loadStored(key: string): string | null {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+function loadStoredNumber(key: string): number | null {
+  const v = loadStored(key)
+  return v ? Number(v) : null
+}
+
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref<string | null>(localStorage.getItem('token'))
-  const userId = ref<string | null>(null)
-  const userName = ref<string | null>(null)
+  const token = ref<string | null>(loadStored('token'))
+  const userId = ref<number | null>(loadStoredNumber('userId'))
+  const userName = ref<string | null>(loadStored('userName'))
   const loading = ref(false)
   const error = ref<string | null>(null)
+
+  // 持久化到 localStorage
+  watch(token, (v) => {
+    if (v) localStorage.setItem('token', v)
+    else localStorage.removeItem('token')
+  })
+  watch(userId, (v) => {
+    if (v != null) localStorage.setItem('userId', String(v))
+    else localStorage.removeItem('userId')
+  })
+  watch(userName, (v) => {
+    if (v) localStorage.setItem('userName', v)
+    else localStorage.removeItem('userName')
+  })
 
   /** 登录 */
   async function login(form: LoginRequest) {
@@ -17,9 +44,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const res = await loginApi(form)
       token.value = res.token
-      userId.value = res.userId
-      userName.value = res.userName
-      localStorage.setItem('token', res.token)
+      userId.value = res.id
+      userName.value = res.username
       return res
     } catch (e: any) {
       error.value = e.response?.data?.message ?? '登录失败'
@@ -34,7 +60,11 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true
     error.value = null
     try {
-      return await registerApi(form)
+      const res = await registerApi(form)
+      token.value = res.token
+      userId.value = res.id
+      userName.value = res.username
+      return res
     } catch (e: any) {
       error.value = e.response?.data?.message ?? '注册失败'
       throw e
@@ -44,15 +74,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /** 登出 */
-  async function logout() {
-    try {
-      await logoutApi()
-    } finally {
-      token.value = null
-      userId.value = null
-      userName.value = null
-      localStorage.removeItem('token')
-    }
+  function logout() {
+    token.value = null
+    userId.value = null
+    userName.value = null
   }
 
   const isLoggedIn = () => !!token.value

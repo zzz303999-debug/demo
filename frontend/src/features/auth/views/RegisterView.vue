@@ -45,9 +45,9 @@ async function handleSubmit() {
 
   submitting.value = true
   try {
-    const customer = await authStore.register({ ...formState })
-    message.success(`注册成功！欢迎 ${customer?.username}`)
-    router.push({ name: 'CustomerDetail', params: { id: customer?.id } })
+    await authStore.register({ ...formState })
+    message.success('注册成功，请登录')
+    router.push('/auth/login')
   } catch (e: any) {
     if (e.response?.status === 409) {
       message.warning(e.response.data.message)

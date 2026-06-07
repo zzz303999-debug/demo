@@ -2,14 +2,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import authRoutes from '@/features/auth/route'
 import customerRoutes from '@/features/customer/route'
+import productRoutes from '@/features/product/route'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/auth/login',
+    redirect: '/products/create',
   },
   ...authRoutes,
   ...customerRoutes,
+  ...productRoutes,
 ]
 
 const router = createRouter({

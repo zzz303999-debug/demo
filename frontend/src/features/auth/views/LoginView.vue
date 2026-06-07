@@ -96,7 +96,6 @@ async function handleSubmit() {
 
         <div class="form-footer">
           <router-link :to="{ name: 'Register' }">注册账号</router-link>
-          <router-link :to="{ name: 'ForgotPassword' }">忘记密码</router-link>
         </div>
       </Form>
     </Card>
